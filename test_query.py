@@ -14,7 +14,7 @@ print("\n Top 5 Placement Packages:")
 for row in qm.get_top_5_placements():
     print(row)
 
-# ✅ New Queries (PDF-based Insights)
+#  New Queries (PDF-based Insights)
 print("\n Soft Skills Distribution:")
 for row in qm.get_soft_skills_distribution():
     print(row)
