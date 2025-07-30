@@ -3,7 +3,7 @@ from query_manager import QueryManager
 
 st.set_page_config(page_title="Placement Eligibility App", layout="centered")
 
-st.title("🎓 Placement Eligibility Dashboard")
+st.title(" Placement Eligibility Dashboard")
 
 qm = QueryManager()
 
