@@ -9,7 +9,7 @@ class DatabaseConnection:
     def connect(self):
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
-        print("✅ Connected to database")
+        print(" Connected to database")
 
     def disconnect(self):
         if self.conn:
