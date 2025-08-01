@@ -131,7 +131,6 @@ for sid in student_ids:
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ''', (sid, mock_score, internships, status, company, package, rounds, date))
 
-# Commit changes
 conn.commit()
 conn.close()
 
