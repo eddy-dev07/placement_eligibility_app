@@ -39,8 +39,6 @@ class QueryManager:
         """
         return self.db.execute_query(query)
 
-    def close(self):
-        self.db.disconnect()
     def get_soft_skills_distribution(self):
         query = """
         SELECT 
@@ -86,6 +84,16 @@ class QueryManager:
         WHERE pl.placement_status = 'Not Ready'
         """
         return self.db.execute_query(query)
+    
+    def get_students_by_age(self):
+     query = """
+     SELECT age, COUNT(*) as student_count
+     FROM students
+     GROUP BY age
+     ORDER BY age
+     """
+     return self.db.execute_query(query)
+ 
 
     def get_certification_distribution(self):
         query = """
@@ -102,3 +110,100 @@ class QueryManager:
         FROM programming
         """
         return self.db.execute_query(query)
+
+    def get_placed_students(self):
+        query = """
+        SELECT * FROM placements
+        WHERE placement_status = 'Placed'
+        """
+        return self.db.execute_query(query)
+
+    def get_not_placed_students(self):
+        query = """
+        SELECT * FROM placements
+        WHERE placement_status = 'Ready'
+        """
+        return self.db.execute_query(query)
+
+    def get_top_problem_solvers(self):
+        query = """
+        SELECT s.name, p.problems_solved
+        FROM students s
+        JOIN programming p ON s.student_id = p.student_id
+        ORDER BY p.problems_solved DESC
+        LIMIT 5
+        """
+        return self.db.execute_query(query)
+
+    def get_students_with_low_soft_skills(self):
+        query = """
+        SELECT s.name, ((communication + teamwork + presentation)/3.0) as avg_soft
+        FROM students s
+        JOIN soft_skills ss ON s.student_id = ss.student_id
+        WHERE ((communication + teamwork + presentation)/3.0) < 40
+        """
+        return self.db.execute_query(query)
+
+    def get_avg_problem_score(self):
+        query = """
+        SELECT AVG(problems_solved) FROM programming
+        """
+        result = self.db.execute_query(query)
+        return round(result[0][0], 2) if result else 0
+
+    def get_avg_soft_skills(self):
+        query = """
+        SELECT AVG((communication + teamwork + presentation)/3.0)
+        FROM soft_skills
+        """
+        result = self.db.execute_query(query)
+        return round(result[0][0], 2) if result else 0
+
+    def get_students_above_avg_coding(self):
+        query = """
+        SELECT s.name, p.problems_solved
+        FROM students s
+        JOIN programming p ON s.student_id = p.student_id
+        WHERE p.problems_solved > (
+            SELECT AVG(problems_solved) FROM programming
+        )
+        """
+        return self.db.execute_query(query)
+    
+    def get_excellent_students(self):
+     query = """
+      SELECT s.name, p.problems_solved, 
+           ((ss.communication + ss.teamwork + ss.presentation)/3.0) AS avg_soft_skill
+     FROM students s
+     JOIN programming p ON s.student_id = p.student_id
+     JOIN soft_skills ss ON s.student_id = ss.student_id
+      WHERE p.problems_solved > 150 
+      AND ((ss.communication + ss.teamwork + ss.presentation)/3.0) > 85
+     """
+     return self.db.execute_query(query)
+
+
+    def get_count_by_status(self):
+      query = """
+      SELECT placement_status, COUNT(*) as count
+      FROM placements
+      GROUP BY placement_status
+      ORDER BY count DESC
+      """
+      return self.db.execute_query(query)
+
+    def get_top_soft_skills(self):
+        query = """
+        SELECT s.name, 
+               ROUND((ss.communication + ss.teamwork + ss.presentation + ss.leadership + ss.critical_thinking + ss.interpersonal_skills)/6.0, 2) AS avg_soft_skill
+        FROM students s
+        JOIN soft_skills ss ON s.student_id = ss.student_id
+        ORDER BY avg_soft_skill DESC
+        LIMIT 5
+        """
+        return self.db.execute_query(query)
+
+
+    def close(self):
+        self.db.disconnect()
+
