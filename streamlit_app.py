@@ -76,5 +76,4 @@ with st.expander(" Top 5 by Soft Skills Score"):
    
 
 
-# Cleanup
 qm.close()
